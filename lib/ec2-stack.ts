@@ -16,16 +16,20 @@ export class Ec2Stack extends cdk.Stack {
     super(scope, id, props);
 
     // Security Group for EC2
-    const ec2SecurityGroup = new ec2.SecurityGroup(this, 'EC2SecurityGroup', {
+    this.ec2SecurityGroup = new ec2.SecurityGroup(this, 'EC2SecurityGroup', {
       vpc: props.vpc,
       description: 'Allow SSH access from IP',
       allowAllOutbound: true,
     });
 
-    // My public IP address with environment variable
-    const myIp = process.env.MY_IP ?? '0.0.0.0/32';
+    // My public IP address as environment variable
+    const myIp = process.env.MY_IP
+      ? process.env.MY_IP.includes('/')
+        ? process.env.MY_IP
+        : `${process.env.MY_IP}/32`
+      : '0.0.0.0/32';
 
-    ec2SecurityGroup.addIngressRule(
+    this.ec2SecurityGroup.addIngressRule(
       ec2.Peer.ipv4(myIp),
       ec2.Port.tcp(22),
       'Allow SSH access from my IP address'
@@ -48,11 +52,12 @@ export class Ec2Stack extends cdk.Stack {
         ec2.InstanceSize.MICRO
       ),
       machineImage: ec2.MachineImage.latestAmazonLinux2023(),
-      securityGroup: ec2SecurityGroup,
+      securityGroup: this.ec2SecurityGroup,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC,
       },
       role: ec2Role,
+      keyName: 'bastion',
     });
 
     // Output the public IP of the EC2 Instance

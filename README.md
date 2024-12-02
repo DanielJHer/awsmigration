@@ -1,14 +1,77 @@
-# Welcome to your CDK TypeScript project
+AWS Migration Project
+This project demonstrates the deployment of a secure AWS infrastructure using AWS CDK with TypeScript. It includes a VPC, an EC2 instance in a public subnet, and an RDS instance in a private subnet, with proper security group configurations to allow controlled communication.
 
-This is a blank project for CDK development with TypeScript.
+Project Features
+VPC:
+Two Availability Zones.
+Public and private subnets.
+EC2 Instance:
+Deployed in a public subnet.
+Secured with SSH access restricted to your public IP.
+RDS Instance:
+Deployed in a private subnet.
+Accessible only from the EC2 instance.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+Project Structure
+├── bin/
+│ └── awsmigration.ts # Entry point for defining stacks
+├── lib/
+│ ├── vpc-stack.ts # Defines the VPC and its subnets
+│ ├── ec2-stack.ts # Defines the EC2 instance and security group
+│ └── rds-stack.ts # Defines the RDS instance and security group
+├── cdk.json # CDK configuration file
+├── package.json # Project dependencies
+├── tsconfig.json # TypeScript configuration
+└── README.md # Project documentation
 
-## Useful commands
+Setup Instructions
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+1. Prerequisites
+   Install Node.js (v14+ recommended).
+   Install the AWS CLI and configure it with your credentials:
+   aws configure
+   Install AWS CDK globally:
+   npm install -g aws-cdk
+
+2. Clone the Repository
+   Clone this project to your local machine:
+   git clone <repository-url>
+   cd awsmigration
+
+3. Install Dependencies
+   Install all required dependencies:
+   npm install
+
+4. Configure Your Environment
+   Set your public IP as an environment variable to restrict SSH access to the EC2 instance:
+   export MY_IP="<your-public-ip>"
+   You can find your public IP using a service like https://whatismyipaddress.com.
+
+5. Synthesize the CloudFormation Templates
+   Generate the CloudFormation templates from your CDK code:
+   cdk synth
+
+6. Deploy the Stacks
+   Deploy all the stacks in the correct order:
+   cdk deploy
+
+7. Verify the Deployment
+   VPC: Check the AWS Console to see the created VPC, subnets, and route tables.
+   EC2 Instance: Note the public IP output in the terminal to SSH into the instance:
+   ssh -i /path/to/your-key.pem ec2-user@<EC2_PUBLIC_IP>
+   RDS Instance: Ensure the RDS instance is accessible from the EC2 instance using a MySQL or PostgreSQL client.
+   Testing the Setup
+   SSH into the EC2 instance:
+   ssh -i /path/to/your-key.pem ec2-user@<EC2_PUBLIC_IP>
+   Install a database client (e.g., MySQL):
+   sudo yum install mysql -y
+   Connect to the RDS instance from the EC2 instance:
+   mysql -h <RDS_ENDPOINT> -u <USERNAME> -p
+
+8. Project Cleanup
+   To avoid incurring unnecessary costs, destroy the deployed resources when you're done:
+   cdk destroy
+
+Known Issues
+Ensure the MY_IP environment variable is set correctly; otherwise, SSH traffic may be blocked.
+Double-check IAM permissions for your AWS CLI profile to allow stack creation.
