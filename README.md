@@ -1,29 +1,6 @@
 AWS Migration Project
 This project demonstrates the deployment of a secure AWS infrastructure using AWS CDK with TypeScript. It includes a VPC, an EC2 instance in a public subnet, and an RDS instance in a private subnet, with proper security group configurations to allow controlled communication.
 
-Project Features
-VPC:
-Two Availability Zones.
-Public and private subnets.
-EC2 Instance:
-Deployed in a public subnet.
-Secured with SSH access restricted to your public IP.
-RDS Instance:
-Deployed in a private subnet.
-Accessible only from the EC2 instance.
-
-Project Structure
-├── bin/
-│ └── awsmigration.ts # Entry point for defining stacks
-├── lib/
-│ ├── vpc-stack.ts # Defines the VPC and its subnets
-│ ├── ec2-stack.ts # Defines the EC2 instance and security group
-│ └── rds-stack.ts # Defines the RDS instance and security group
-├── cdk.json # CDK configuration file
-├── package.json # Project dependencies
-├── tsconfig.json # TypeScript configuration
-└── README.md # Project documentation
-
 Setup Instructions
 
 1. Prerequisites
